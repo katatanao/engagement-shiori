@@ -73,6 +73,7 @@ header.scrolled {
 }
 
 /* モバイルメニュー開閉 */
-#menu-btn.open span:nth-child(1) { transform: rotate(45deg); }
+#menu-btn span { transform-origin: center; }
+#menu-btn.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
 #menu-btn.open span:nth-child(2) { opacity: 0; }
-#menu-btn.open span:nth-child(3) { transform: rotate(-45deg); }
+#menu-btn.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
