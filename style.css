@@ -60,16 +60,74 @@ header.scrolled {
 }
 
 /* ギャラリーホバーズーム */
-.gallery-item:hover .img-placeholder {
+.gallery-item:hover .gallery-image,
+.gallery-item:hover .gallery-fallback {
     transform: scale(1.1);
 }
-.img-placeholder {
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.7s;
+}
+
+.gallery-fallback {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #F2EFE9;
+    color: #C4A47C;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    transition: transform 0.7s;
+}
+
+.gallery-item {
+    cursor: pointer;
+}
+
+.gallery-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(34, 29, 24, 0.88);
+}
+
+.gallery-modal.hidden {
+    display: none;
+}
+
+.gallery-modal-content {
+    max-width: min(1200px, 100%);
+    max-height: 100%;
+}
+
+.gallery-modal-image {
+    display: block;
+    max-width: 100%;
+    max-height: calc(100vh - 48px);
+    object-fit: contain;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.gallery-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    border: 0;
+    background: transparent;
+    color: #FFFFFF;
+    font-size: 40px;
+    line-height: 1;
+    cursor: pointer;
 }
 
 /* モバイルメニュー開閉 */

@@ -7,6 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const sections = document.querySelectorAll('.section');
     const navLinks = document.querySelectorAll('.nav-link');
     const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const galleryModal = document.getElementById('gallery-modal');
+    const galleryModalImage = document.getElementById('gallery-modal-image');
+    const galleryModalClose = document.getElementById('gallery-modal-close');
 
     // --- 1. スクロール時のヘッダー変化 ---
     window.addEventListener('scroll', () => {
@@ -89,5 +93,54 @@ document.addEventListener("DOMContentLoaded", () => {
                 behavior: "smooth"
             });
         });
+    });
+
+    // --- 5. ギャラリー画像の全画面表示 ---
+    const closeGalleryModal = () => {
+        galleryModal.classList.add('hidden');
+        galleryModal.setAttribute('aria-hidden', 'true');
+        galleryModalImage.src = '';
+        document.body.classList.remove('overflow-hidden');
+    };
+
+    const openGalleryModal = (image) => {
+        if (!image || !image.getAttribute('src')) {
+            return;
+        }
+
+        galleryModalImage.src = image.getAttribute('src');
+        galleryModalImage.alt = image.getAttribute('alt') || '拡大表示した写真';
+        galleryModal.classList.remove('hidden');
+        galleryModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('overflow-hidden');
+    };
+
+    galleryItems.forEach(item => {
+        const image = item.querySelector('.gallery-image');
+
+        if (!image) {
+            return;
+        }
+
+        item.addEventListener('click', () => {
+            if (image.style.display === 'none') {
+                return;
+            }
+
+            openGalleryModal(image);
+        });
+    });
+
+    galleryModalClose.addEventListener('click', closeGalleryModal);
+    galleryModal.addEventListener('click', (event) => {
+        if (event.target === galleryModal) {
+            closeGalleryModal();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !galleryModal.classList.contains('hidden')) {
+            closeGalleryModal();
+        }
     });
 });
