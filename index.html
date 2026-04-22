@@ -33,9 +33,9 @@
 
     <header id="main-header" class="fixed top-0 left-0 w-full z-[60] transition-all duration-500 py-4 px-6">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="font-en text-xl tracking-[0.2em] text-theme-accent font-semibold">両家顔合わせ</div>
-            
-            <nav class="hidden lg:flex space-x-6 text-[14px] tracking-[0.15em] uppercase font-medium">
+            <span class="font-en text-xl tracking-[0.2em] text-theme-accent font-semibold">両家顔合わせ</span>
+
+            <nav class="hidden lg:flex space-x-6 text-[14px] tracking-[0.15em] uppercase font-medium" aria-label="メインナビゲーション">
                 <a href="#greeting" class="nav-link">ご挨拶</a>
                 <a href="#timeline" class="nav-link">当日の流れ</a>
                 <a href="#seating" class="nav-link">席次表</a>
@@ -48,7 +48,7 @@
                 <a href="#schedule" class="nav-link">入籍日</a>
             </nav>
 
-            <button id="menu-btn" class="lg:hidden flex flex-col justify-between w-6 h-4 z-[70]">
+            <button id="menu-btn" class="lg:hidden flex flex-col justify-between w-6 h-4 z-[70]" aria-label="メニューを開く" aria-expanded="false" aria-controls="mobile-menu">
                 <span class="w-full h-px bg-theme-accent transition-all duration-300 origin-top-left"></span>
                 <span class="w-full h-px bg-theme-accent transition-all duration-300"></span>
                 <span class="w-full h-px bg-theme-accent transition-all duration-300 origin-bottom-left"></span>
@@ -56,8 +56,8 @@
         </div>
     </header>
 
-    <div id="mobile-menu" class="fixed inset-0 bg-theme-white z-[55] translate-x-full transition-transform duration-500 flex flex-col items-center justify-center space-y-8 text-center">
-        <nav class="flex flex-col space-y-6 text-sm tracking-[0.2em] uppercase">
+    <div id="mobile-menu" class="fixed inset-0 bg-theme-white z-[55] translate-x-full transition-transform duration-500 flex flex-col items-center justify-center space-y-8 text-center" role="dialog" aria-label="モバイルメニュー">
+        <nav class="flex flex-col space-y-6 text-sm tracking-[0.2em] uppercase" aria-label="モバイルナビゲーション">
             <a href="#greeting" class="mobile-nav-link">ご挨拶</a>
             <a href="#timeline" class="mobile-nav-link">当日の流れ</a>
             <a href="#seating" class="mobile-nav-link">席次表</a>
@@ -69,10 +69,10 @@
             <a href="#message" class="mobile-nav-link">メッセージ</a>
             <a href="#schedule" class="mobile-nav-link">入籍日</a>
         </nav>
-        <div class="pt-8">
-            <p class="font-en text-theme-accent tracking-widest text-lg">2026.04.25</p>
-        </div>
+        <p class="pt-8 font-en text-theme-accent tracking-widest text-lg">2026.04.25</p>
     </div>
+
+    <main>
 
     <section class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="parallax-bg absolute inset-0 bg-theme-light z-0 scale-110"></div>
@@ -80,11 +80,11 @@
         <div class="relative z-20 text-center fade-in-up">
             <p class="font-en text-theme-accent text-xl tracking-[0.4em] mb-6">Engagement Party</p>
             <h1 class="text-3xl md:text-4xl tracking-[0.25em] leading-relaxed mb-8 font-medium">両家顔合わせのしおり</h1>
-            <div class="w-px h-16 bg-theme-accent mx-auto mb-8"></div>
+            <div class="w-px h-16 bg-theme-accent mx-auto mb-8" aria-hidden="true"></div>
             <p class="tracking-[0.2em] text-sm md:text-base">2026.04.25</p>
             <p class="tracking-[0.2em] text-sm md:text-base mt-2">Dynamic Kitchen & Bar 燦－SUN－</p>
         </div>
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce opacity-50">
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce opacity-50" aria-hidden="true">
             <div class="w-px h-12 bg-theme-accent"></div>
         </div>
     </section>
@@ -115,7 +115,7 @@
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Time Line</p>
             </div>
             <div class="relative pl-12 space-y-12">
-                <div class="absolute left-0 top-0 bottom-0 w-px bg-theme-accent/30"></div>
+                <div class="absolute left-0 top-0 bottom-0 w-px bg-theme-accent/30" aria-hidden="true"></div>
                 <div class="relative">
                     <div class="absolute -left-[52px] top-1 w-2.5 h-2.5 rounded-full bg-theme-accent ring-8 ring-theme-base"></div>
                     <p class="text-xs font-en text-theme-accent tracking-widest mb-1">12:00</p>
@@ -276,16 +276,43 @@
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">お品書き</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Menu</p>
             </div>
-            <div class="space-y-10 tracking-widest">
-                <div><p class="text-xs text-theme-accent font-en mb-2">前菜</p><p>京都府鹿島屋「寄せ豆腐」</p><p>蚕豆のちぎり揚げ</p><p>蛍烏賊の酢味噌和え</p><p>ローストビーフ</p></div>
-                <div><p class="text-xs text-theme-accent font-en mb-2">造里</p><p>お造り3種盛り合わせ</p></div>
-                <div><p class="text-xs text-theme-accent font-en mb-2">椀物</p><p>蛤の澄まし椀</p></div>
-                <div><p class="text-xs text-theme-accent font-en mb-2">揚物</p><p>筍の桜海老真丈挟み揚げ</p></div>
-                <div><p class="text-xs text-theme-accent font-en mb-2">焼物</p><p>金目鯛の雲丹醤油焼き</p></div>
-                <div><p class="text-xs text-theme-accent font-en mb-2">鉄板</p><p>国産牛フィレ肉のステーキ</p></div>
-                <div><p class="text-xs text-theme-accent font-en mb-2">〆物</p><p>葉山葵おろし蕎麦</p></div>
-                <div><p class="text-xs text-theme-accent font-en mb-2">甘味</p><p>季節のデザート</p></div>
-            </div>
+            <dl class="space-y-10 tracking-widest">
+                <div>
+                    <dt class="text-xs text-theme-accent font-en mb-2">前菜</dt>
+                    <dd>京都府鹿島屋「寄せ豆腐」</dd>
+                    <dd>蚕豆のちぎり揚げ</dd>
+                    <dd>蛍烏賊の酢味噌和え</dd>
+                    <dd>ローストビーフ</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-theme-accent font-en mb-2">造里</dt>
+                    <dd>お造り3種盛り合わせ</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-theme-accent font-en mb-2">椀物</dt>
+                    <dd>蛤の澄まし椀</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-theme-accent font-en mb-2">揚物</dt>
+                    <dd>筍の桜海老真丈挟み揚げ</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-theme-accent font-en mb-2">焼物</dt>
+                    <dd>金目鯛の雲丹醤油焼き</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-theme-accent font-en mb-2">鉄板</dt>
+                    <dd>国産牛フィレ肉のステーキ</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-theme-accent font-en mb-2">〆物</dt>
+                    <dd>葉山葵おろし蕎麦</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-theme-accent font-en mb-2">甘味</dt>
+                    <dd>季節のデザート</dd>
+                </div>
+            </dl>
         </div>
     </section>
 
@@ -298,22 +325,15 @@
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="space-y-6">
                     <h3 class="text-xl tracking-widest">Dynamic Kitchen & Bar 燦 SUN ヒルトンプラザウエスト店</h3>
-                    <p class="text-sm leading-relaxed opacity-80">
+                    <address class="text-sm leading-relaxed opacity-80 not-italic">
                         〒536-0001<br>
                         大阪府大阪市北区梅田 2-2-2 ヒルトンプラザウエスト6F<br>
                         TEL: 050-3144-0251
-                    </p>
-                        <a
-        href="https://www.dynacjapan.com/brands/sun/shops/hiltonplaza-west/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-block text-sm tracking-[0.2em] text-theme-accent border-b border-theme-accent/40 pb-1 hover:opacity-70 transition"
-    >
-        Official Website
-    </a>
+                    </address>
+                    <a href="https://www.dynacjapan.com/brands/sun/shops/hiltonplaza-west/" target="_blank" rel="noopener noreferrer" class="inline-block text-sm tracking-[0.2em] text-theme-accent border-b border-theme-accent/40 pb-1 hover:opacity-70 transition">Official Website</a>
                 </div>
                 <div class="h-64 bg-theme-light rounded-sm overflow-hidden">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.2162901034053!2d135.495296!3d34.69972419999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e68d3b11e15f%3A0x8a0ff8e64bc5b13e!2zRHluYW1pYyBLaXRjaGVuICYgQmFyIOeHpu-8jVNVTu-8jSDjg5Ljg6vjg4jjg7Pjg5fjg6njgrbjgqbjgqjjgrnjg4jlupc!5e0!3m2!1sja!2sjp!4v1776781082930!5m2!1sja!2sjp" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.2162901034053!2d135.495296!3d34.69972419999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e68d3b11e15f%3A0x8a0ff8e64bc5b13e!2zRHluYW1pYyBLaXRjaGVuICYgQmFyIOeHpu-8jVNVTu-8jSDjg5Ljg6vjg4jjg7Pjg5fjg6njgrbjgqbjgqjjgrnjg4jlupc!5e0!3m2!1sja!2sjp!4v1776781082930!5m2!1sja!2sjp" width="100%" height="100%" style="border:0;" allowfullscreen="" title="Dynamic Kitchen & Bar 燦 SUN ヒルトンプラザウエスト店の地図" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
@@ -327,27 +347,27 @@
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-in-up">
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
-                    <img src="images/memory-1.jpg" alt="思い出の写真 1" class="gallery-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                    <img src="images/memory-1.jpg" alt="思い出の写真 1" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 1</div>
                 </div>
                 <div class="gallery-item relative aspect-[4/5] overflow-hidden bg-white md:row-span-2">
-                    <img src="images/memory-2.jpg" alt="思い出の写真 2" class="gallery-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                    <img src="images/memory-2.jpg" alt="思い出の写真 2" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 2</div>
                 </div>
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
-                    <img src="images/memory-3.jpg" alt="思い出の写真 3" class="gallery-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                    <img src="images/memory-3.jpg" alt="思い出の写真 3" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 3</div>
                 </div>
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
-                    <img src="images/memory-4.jpg" alt="思い出の写真 4" class="gallery-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                    <img src="images/memory-4.jpg" alt="思い出の写真 4" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 4</div>
                 </div>
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
-                    <img src="images/memory-5.jpg" alt="思い出の写真 5" class="gallery-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                    <img src="images/memory-5.jpg" alt="思い出の写真 5" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 5</div>
                 </div>
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
-                    <img src="images/memory-6.jpg" alt="思い出の写真 6" class="gallery-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                    <img src="images/memory-6.jpg" alt="思い出の写真 6" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 6</div>
                 </div>
             </div>
@@ -385,14 +405,16 @@
         </div>
     </section>
 
+    </main>
+
     <footer class="py-12 text-center text-[10px] opacity-40 tracking-[0.3em] uppercase border-t border-theme-light">
         &copy; 2026 nao & asuka Engagement
     </footer>
 
-    <div id="gallery-modal" class="gallery-modal hidden" aria-hidden="true">
-        <button id="gallery-modal-close" class="gallery-modal-close" type="button" aria-label="写真を閉じる">×</button>
-        <div class="gallery-modal-content">
-            <img id="gallery-modal-image" src="" alt="拡大表示した写真" class="gallery-modal-image">
+    <div id="gallery-modal" class="gallery-modal hidden" role="dialog" aria-label="写真の拡大表示" aria-hidden="true">
+        <button id="gallery-modal-close" class="gallery-modal__close" type="button" aria-label="写真を閉じる">&times;</button>
+        <div class="gallery-modal__content">
+            <img id="gallery-modal-image" src="" alt="拡大表示した写真" class="gallery-modal__image">
         </div>
     </div>
 

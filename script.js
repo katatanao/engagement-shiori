@@ -1,146 +1,201 @@
 // script.js
 
-document.addEventListener("DOMContentLoaded", () => {
-    const header = document.getElementById('main-header');
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const sections = document.querySelectorAll('.section');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    const galleryModal = document.getElementById('gallery-modal');
-    const galleryModalImage = document.getElementById('gallery-modal-image');
-    const galleryModalClose = document.getElementById('gallery-modal-close');
+(function () {
+    'use strict';
 
-    // --- 1. スクロール時のヘッダー変化 ---
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
+    document.addEventListener('DOMContentLoaded', init);
 
-        // パララックス風演出 (Hero背景を微動)
-        const parallax = document.querySelector('.parallax-bg');
-        if (parallax) {
-            let offset = window.scrollY * 0.1;
-            parallax.style.transform = `translateY(${offset}px) scale(1.1)`;
-        }
-    });
+    function init() {
+        initGalleryImageFallbacks();
+        initScrollHeader();
+        initMobileMenu();
+        initFadeInObserver();
+        initNavHighlightObserver();
+        initSmoothScroll();
+        initGalleryModal();
+    }
 
-    // --- 2. ハンバーガーメニュー開閉 ---
-    const openMenu = () => {
-        menuBtn.classList.add('open');
-        mobileMenu.classList.remove('translate-x-full');
-        document.body.classList.add('overflow-hidden');
-    };
+    // --- Gallery image error fallback (replaces inline onerror) ---
 
-    const closeMenu = () => {
-        menuBtn.classList.remove('open');
-        mobileMenu.classList.add('translate-x-full');
-        document.body.classList.remove('overflow-hidden');
-    };
-
-    const toggleMenu = () => {
-        if (menuBtn.classList.contains('open')) {
-            closeMenu();
-            return;
-        }
-
-        openMenu();
-    };
-
-    menuBtn.addEventListener('click', toggleMenu);
-    mobileLinks.forEach(link => link.addEventListener('click', closeMenu));
-
-    // --- 3. Intersection Observer (フェードイン & ナビハイライト) ---
-    const observerOptions = {
-        root: null,
-        rootMargin: '-20% 0px -20% 0px', // 画面中央付近で見えたら発火
-        threshold: 0
-    };
-
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            // フェードインアニメーション
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                
-                // ナビハイライトの更新
-                const id = entry.target.getAttribute('id');
-                navLinks.forEach(link => {
-                    link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
-                });
-            }
-        });
-    }, observerOptions);
-
-    // 各セクションとフェード要素を監視
-    sections.forEach(section => sectionObserver.observe(section));
-    document.querySelectorAll('.fade-in-up').forEach(el => sectionObserver.observe(el));
-
-    // --- 4. スムーズスクロール (補正) ---
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            const headerHeight = header.offsetHeight;
-            const offsetPosition = targetElement.offsetTop - headerHeight;
-
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
+    function initGalleryImageFallbacks() {
+        document.querySelectorAll('.gallery-image').forEach(function (img) {
+            img.addEventListener('error', function () {
+                this.style.display = 'none';
+                var fallback = this.nextElementSibling;
+                if (fallback) {
+                    fallback.classList.remove('hidden');
+                }
             });
         });
-    });
+    }
 
-    // --- 5. ギャラリー画像の全画面表示 ---
-    const closeGalleryModal = () => {
-        galleryModal.classList.add('hidden');
-        galleryModal.setAttribute('aria-hidden', 'true');
-        galleryModalImage.src = '';
-        document.body.classList.remove('overflow-hidden');
-    };
+    // --- Scroll-based header style & parallax ---
 
-    const openGalleryModal = (image) => {
-        if (!image || !image.getAttribute('src')) {
-            return;
-        }
+    function initScrollHeader() {
+        var header = document.getElementById('main-header');
+        var parallax = document.querySelector('.parallax-bg');
+        var ticking = false;
 
-        galleryModalImage.src = image.getAttribute('src');
-        galleryModalImage.alt = image.getAttribute('alt') || '拡大表示した写真';
-        galleryModal.classList.remove('hidden');
-        galleryModal.setAttribute('aria-hidden', 'false');
-        document.body.classList.add('overflow-hidden');
-    };
+        window.addEventListener('scroll', function () {
+            if (!ticking) {
+                requestAnimationFrame(function () {
+                    var scrollY = window.scrollY;
 
-    galleryItems.forEach(item => {
-        const image = item.querySelector('.gallery-image');
+                    header.classList.toggle('scrolled', scrollY > 100);
 
-        if (!image) {
-            return;
-        }
+                    if (parallax) {
+                        parallax.style.transform = 'translateY(' + (scrollY * 0.1) + 'px) scale(1.1)';
+                    }
 
-        item.addEventListener('click', () => {
-            if (image.style.display === 'none') {
-                return;
+                    ticking = false;
+                });
+                ticking = true;
             }
+        }, { passive: true });
+    }
 
-            openGalleryModal(image);
+    // --- Mobile hamburger menu ---
+
+    function initMobileMenu() {
+        var menuBtn = document.getElementById('menu-btn');
+        var mobileMenu = document.getElementById('mobile-menu');
+        var isOpen = false;
+
+        function open() {
+            isOpen = true;
+            menuBtn.classList.add('open');
+            menuBtn.setAttribute('aria-expanded', 'true');
+            menuBtn.setAttribute('aria-label', 'メニューを閉じる');
+            mobileMenu.classList.remove('translate-x-full');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function close() {
+            isOpen = false;
+            menuBtn.classList.remove('open');
+            menuBtn.setAttribute('aria-expanded', 'false');
+            menuBtn.setAttribute('aria-label', 'メニューを開く');
+            mobileMenu.classList.add('translate-x-full');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        menuBtn.addEventListener('click', function () {
+            isOpen ? close() : open();
         });
-    });
 
-    galleryModalClose.addEventListener('click', closeGalleryModal);
-    galleryModal.addEventListener('click', (event) => {
-        if (event.target === galleryModal) {
-            closeGalleryModal();
-        }
-    });
+        mobileMenu.querySelectorAll('.mobile-nav-link').forEach(function (link) {
+            link.addEventListener('click', close);
+        });
+    }
 
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && !galleryModal.classList.contains('hidden')) {
-            closeGalleryModal();
+    // --- Fade-in animation observer ---
+
+    function initFadeInObserver() {
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            rootMargin: '-20% 0px -20% 0px',
+            threshold: 0
+        });
+
+        document.querySelectorAll('.fade-in-up').forEach(function (el) {
+            observer.observe(el);
+        });
+    }
+
+    // --- Active nav link highlight observer ---
+
+    function initNavHighlightObserver() {
+        var navLinks = document.querySelectorAll('.nav-link');
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    var id = entry.target.getAttribute('id');
+                    navLinks.forEach(function (link) {
+                        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+                    });
+                }
+            });
+        }, {
+            rootMargin: '-20% 0px -20% 0px',
+            threshold: 0
+        });
+
+        document.querySelectorAll('.section[id]').forEach(function (section) {
+            observer.observe(section);
+        });
+    }
+
+    // --- Smooth scroll for desktop nav ---
+
+    function initSmoothScroll() {
+        var header = document.getElementById('main-header');
+
+        document.querySelectorAll('.nav-link').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                var target = document.querySelector(this.getAttribute('href'));
+                if (!target) return;
+
+                window.scrollTo({
+                    top: target.offsetTop - header.offsetHeight,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    }
+
+    // --- Gallery lightbox modal ---
+
+    function initGalleryModal() {
+        var modal = document.getElementById('gallery-modal');
+        var modalImage = document.getElementById('gallery-modal-image');
+        var closeBtn = document.getElementById('gallery-modal-close');
+
+        function openModal(img) {
+            var src = img.getAttribute('src');
+            if (!src) return;
+
+            modalImage.src = src;
+            modalImage.alt = img.getAttribute('alt') || '拡大表示した写真';
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('overflow-hidden');
         }
-    });
-});
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+            modalImage.src = '';
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        document.querySelectorAll('.gallery-item').forEach(function (item) {
+            var img = item.querySelector('.gallery-image');
+            if (!img) return;
+
+            item.addEventListener('click', function () {
+                if (img.style.display === 'none') return;
+                openModal(img);
+            });
+        });
+
+        closeBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) closeModal();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    }
+})();
