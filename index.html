@@ -31,6 +31,17 @@
 </head>
 <body class="bg-theme-base text-theme-text font-serif antialiased scroll-smooth">
 
+    <div id="password-gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-theme-base">
+        <div class="text-center px-8 w-full max-w-xs">
+            <p class="font-en text-theme-accent text-xl tracking-[0.4em] mb-2">Engagement Party</p>
+            <p class="text-[12px] tracking-[0.3em] opacity-50 mb-8">2026.04.25</p>
+            <div class="w-px h-10 bg-theme-accent/40 mx-auto mb-10" aria-hidden="true"></div>
+            <input id="password-input" type="password" placeholder="パスワードを入力" class="password-input" autocomplete="current-password">
+            <p id="password-error" class="password-error hidden" role="alert">パスワードが違います</p>
+            <button id="password-submit" type="button" class="password-submit">Enter</button>
+        </div>
+    </div>
+
     <header id="main-header" class="fixed top-0 left-0 w-full z-[60] transition-all duration-500 py-4 px-6">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <span class="font-en text-xl tracking-[0.2em] text-theme-accent font-semibold">両家顔合わせ</span>
@@ -72,7 +83,7 @@
         <p class="pt-8 font-en text-theme-accent tracking-widest text-lg">2026.04.25</p>
     </div>
 
-    <main>
+    <main id="main-content" style="display:none">
 
     <section class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="parallax-bg absolute inset-0 bg-theme-light z-0 scale-110"></div>
@@ -171,37 +182,42 @@
                 <div class="space-y-12 fade-in-up">
                     <h3 class="font-en text-xl border-b border-theme-accent pb-2 inline-block">新郎側</h3>
                     <div class="flex items-start space-x-6">
-                        <img src="images/family/groom-father.jpg" alt="堅田 学" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                        <img data-src="images/family/groom-father.jpg" alt="堅田 学" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">父</p>
+                            <p class="text-[12px] tracking-widest">S41.09.11</p>
                             <p class="text-lg mb-2">堅田 学</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-6">
-                        <img src="images/family/groom-mother.jpg" alt="堅田 洋子" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                        <img data-src="images/family/groom-mother.jpg" alt="堅田 洋子" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">母</p>
+                            <p class="text-[12px] tracking-widest">1966.03.25</p>
                             <p class="text-lg mb-2">堅田 洋子</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-6">
-                        <img src="images/family/groom-sister1.jpg" alt="堅田 笑香" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                        <img data-src="images/family/groom-sister1.jpg" alt="堅田 笑香" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">長女</p>
+                            <p class="text-[12px] tracking-widest">S63.07.15</p>
                             <p class="text-lg mb-2">堅田 笑香</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-6">
-                        <img src="images/family/groom-sister2.jpg" alt="南 咲歩" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                        <img data-src="images/family/groom-sister2.jpg" alt="南 咲歩" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">次女</p>
+                            <p class="text-[12px] tracking-widest">S65.03.12</p>
                             <p class="text-lg mb-2">南 咲歩</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-6">
-                        <img src="images/family/groom.jpg" alt="堅田 直" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                        <img data-src="images/family/groom.jpg" alt="堅田 直" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">長男</p>
+                            <p class="text-[12px] tracking-widest">1998.02.17</p>
                             <p class="text-lg mb-2">堅田 直</p>
                         </div>
                     </div>
@@ -209,30 +225,34 @@
                 <div class="space-y-12 fade-in-up">
                     <h3 class="font-en text-xl border-b border-theme-accent pb-2 inline-block">新婦側</h3>
                     <div class="flex items-start space-x-6">
-                        <img src="images/family/bride-father.jpg" alt="南出 健司" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                        <img data-src="images/family/bride-father.jpg" alt="南出 健司" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">父</p>
+                            <p class="text-[12px] tracking-widest">S41.09.11</p>
                             <p class="text-lg mb-2">南出 健司</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-6">
-                        <img src="images/family/bride-mother.jpg" alt="南出 千加代" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                        <img data-src="images/family/bride-mother.jpg" alt="南出 千加代" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">母</p>
+                            <p class="text-[12px] tracking-widest">S44.05.23</p>
                             <p class="text-lg mb-2">南出 千加代</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-6">
-                        <img src="images/family/bride-brother.jpg" alt="南出 雄貴" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                        <img data-src="images/family/bride-brother.jpg" alt="南出 雄貴" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">長男</p>
+                            <p class="text-[12px] tracking-widest">S63.07.15</p>
                             <p class="text-lg mb-2">南出 雄貴</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-6">
-                        <img src="images/family/bride.jpg" alt="南出 明日香" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                        <img data-src="images/family/bride.jpg" alt="南出 明日香" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">長女</p>
+                            <p class="text-[12px] tracking-widest">1998.05.08</p>
                             <p class="text-lg mb-2">南出 明日香</p>
                         </div>
                     </div>
@@ -252,8 +272,8 @@
                     <p class="font-en text-theme-accent text-sm mb-4">新郎</p>
                     <h3 class="text-xl tracking-widest mb-6">堅田 直</h3>
                     <ul class="text-sm space-y-4 opacity-80">
-                        <li class="flex justify-between border-b border-white pb-2"><span>出身</span><span>東京都</span></li>
-                        <li class="flex justify-between border-b border-white pb-2"><span>趣味</span><span>カメラ・キャンプ</span></li>
+                        <li class="flex justify-between border-b border-white pb-2"><span>出身</span><span>和歌山県白浜町</span></li>
+                        <li class="flex justify-between border-b border-white pb-2"><span>趣味</span><span>音楽ライブ・ゲーム</span></li>
                         <li class="pt-2 leading-loose">お互いに支えあえる、温かい家庭を築いていきたいです。</li>
                     </ul>
                 </div>
@@ -261,8 +281,8 @@
                     <p class="font-en text-theme-accent text-sm mb-4">新婦</p>
                     <h3 class="text-xl tracking-widest mb-6">南出 明日香</h3>
                     <ul class="text-sm space-y-4 opacity-80">
-                        <li class="flex justify-between border-b border-white pb-2"><span>出身</span><span>神奈川県</span></li>
-                        <li class="flex justify-between border-b border-white pb-2"><span>趣味</span><span>料理・映画</span></li>
+                        <li class="flex justify-between border-b border-white pb-2"><span>出身</span><span>大阪府大阪市阿倍野区</span></li>
+                        <li class="flex justify-between border-b border-white pb-2"><span>趣味</span><span>音楽ライブ・麻雀</span></li>
                         <li class="pt-2 leading-loose">お互いを思いやり、何でも話し合える関係でいたいです。</li>
                     </ul>
                 </div>
@@ -333,7 +353,7 @@
                     <a href="https://www.dynacjapan.com/brands/sun/shops/hiltonplaza-west/" target="_blank" rel="noopener noreferrer" class="inline-block text-sm tracking-[0.2em] text-theme-accent border-b border-theme-accent/40 pb-1 hover:opacity-70 transition">Official Website</a>
                 </div>
                 <div class="h-64 bg-theme-light rounded-sm overflow-hidden">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.2162901034053!2d135.495296!3d34.69972419999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e68d3b11e15f%3A0x8a0ff8e64bc5b13e!2zRHluYW1pYyBLaXRjaGVuICYgQmFyIOeHpu-8jVNVTu-8jSDjg5Ljg6vjg4jjg7Pjg5fjg6njgrbjgqbjgqjjgrnjg4jlupc!5e0!3m2!1sja!2sjp!4v1776781082930!5m2!1sja!2sjp" width="100%" height="100%" style="border:0;" allowfullscreen="" title="Dynamic Kitchen & Bar 燦 SUN ヒルトンプラザウエスト店の地図" loading="lazy"></iframe>
+                    <iframe data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.2162901034053!2d135.495296!3d34.69972419999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e68d3b11e15f%3A0x8a0ff8e64bc5b13e!2zRHluYW1pYyBLaXRjaGVuICYgQmFyIOeHpu-8jVNVTu-8jSDjg5Ljg6vjg4jjg7Pjg5fjg6njgrbjgqbjgqjjgrnjg4jlupc!5e0!3m2!1sja!2sjp!4v1776781082930!5m2!1sja!2sjp" width="100%" height="100%" style="border:0;" allowfullscreen="" title="Dynamic Kitchen & Bar 燦 SUN ヒルトンプラザウエスト店の地図" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
@@ -347,27 +367,27 @@
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-in-up">
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
-                    <img src="images/memory-1.jpg" alt="思い出の写真 1" class="gallery-image" loading="lazy">
+                    <img data-src="images/memory-1.jpg" alt="思い出の写真 1" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 1</div>
                 </div>
                 <div class="gallery-item relative aspect-[4/5] overflow-hidden bg-white md:row-span-2">
-                    <img src="images/memory-2.jpg" alt="思い出の写真 2" class="gallery-image" loading="lazy">
+                    <img data-src="images/memory-2.jpg" alt="思い出の写真 2" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 2</div>
                 </div>
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
-                    <img src="images/memory-3.jpg" alt="思い出の写真 3" class="gallery-image" loading="lazy">
+                    <img data-src="images/memory-3.jpg" alt="思い出の写真 3" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 3</div>
                 </div>
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
-                    <img src="images/memory-4.jpg" alt="思い出の写真 4" class="gallery-image" loading="lazy">
+                    <img data-src="images/memory-4.jpg" alt="思い出の写真 4" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 4</div>
                 </div>
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
-                    <img src="images/memory-5.jpg" alt="思い出の写真 5" class="gallery-image" loading="lazy">
+                    <img data-src="images/memory-5.jpg" alt="思い出の写真 5" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 5</div>
                 </div>
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
-                    <img src="images/memory-6.jpg" alt="思い出の写真 6" class="gallery-image" loading="lazy">
+                    <img data-src="images/memory-6.jpg" alt="思い出の写真 6" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 6</div>
                 </div>
             </div>
@@ -383,7 +403,7 @@
             <div class="space-y-20">
                 <div class="relative p-8 bg-theme-base rounded-sm">
                     <p class="absolute -top-4 left-6 px-4 bg-theme-accent text-white text-[12px] tracking-widest uppercase py-1">直～南出様へ～</p>
-                    <p class="text-[15px] leading-loose italic opacity-80">「花子さんを家族として迎えられることを大変嬉しく思います。二人で手を取り合い、温かな家庭を築いてください。」</p>
+                    <p class="text-[15px] leading-loose italic opacity-80">「明日香さんとこれから一緒に歩んでいけることを、とても嬉しく思っています。まだ未熟ではありますが、支え合いながら温かい家庭を築いていきます。これからどうぞよろしくお願いいたします。」</p>
                 </div>
                 <div class="relative p-8 bg-theme-base rounded-sm">
                     <p class="absolute -top-4 left-6 px-4 bg-theme-accent text-white text-[12px] tracking-widest uppercase py-1">明日香～堅田様へ～</p>
@@ -407,7 +427,7 @@
 
     </main>
 
-    <footer class="py-12 text-center text-[10px] opacity-40 tracking-[0.3em] uppercase border-t border-theme-light">
+    <footer id="main-footer" style="display:none" class="py-12 text-center text-[10px] opacity-40 tracking-[0.3em] uppercase border-t border-theme-light">
         &copy; 2026 nao & asuka Engagement
     </footer>
 

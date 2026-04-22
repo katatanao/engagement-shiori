@@ -3,16 +3,89 @@
 (function () {
     'use strict';
 
+    var CORRECT_HASH = '59e104390f2d7fb29a81a4ea634114e1ff2b70b9518813f4530a4e2e9cefb04e';
+    var SESSION_KEY = 'shiori_auth';
+
     document.addEventListener('DOMContentLoaded', init);
 
     function init() {
-        initGalleryImageFallbacks();
-        initScrollHeader();
-        initMobileMenu();
-        initFadeInObserver();
-        initNavHighlightObserver();
-        initSmoothScroll();
-        initGalleryModal();
+        initPasswordGate(function () {
+            revealContent();
+            initGalleryImageFallbacks();
+            initScrollHeader();
+            initMobileMenu();
+            initFadeInObserver();
+            initNavHighlightObserver();
+            initSmoothScroll();
+            initGalleryModal();
+        });
+    }
+
+    // --- Password gate ---
+
+    function initPasswordGate(onSuccess) {
+        var gate = document.getElementById('password-gate');
+
+        if (sessionStorage.getItem(SESSION_KEY) === '1') {
+            gate.style.display = 'none';
+            onSuccess();
+            return;
+        }
+
+        var input = document.getElementById('password-input');
+        var submitBtn = document.getElementById('password-submit');
+        var errorMsg = document.getElementById('password-error');
+
+        function attempt() {
+            var value = input.value;
+            if (!value) return;
+            hashString(value).then(function (hash) {
+                if (hash === CORRECT_HASH) {
+                    sessionStorage.setItem(SESSION_KEY, '1');
+                    errorMsg.classList.add('hidden');
+                    gate.style.transition = 'opacity 0.8s';
+                    gate.style.opacity = '0';
+                    setTimeout(function () {
+                        gate.style.display = 'none';
+                        onSuccess();
+                    }, 800);
+                } else {
+                    errorMsg.classList.remove('hidden');
+                    input.value = '';
+                    input.focus();
+                }
+            });
+        }
+
+        submitBtn.addEventListener('click', attempt);
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') attempt();
+        });
+    }
+
+    function revealContent() {
+        var main = document.getElementById('main-content');
+        var footer = document.getElementById('main-footer');
+        if (main) main.style.display = '';
+        if (footer) footer.style.display = '';
+
+        document.querySelectorAll('img[data-src]').forEach(function (img) {
+            img.setAttribute('src', img.getAttribute('data-src'));
+            img.removeAttribute('data-src');
+        });
+        document.querySelectorAll('iframe[data-src]').forEach(function (iframe) {
+            iframe.setAttribute('src', iframe.getAttribute('data-src'));
+            iframe.removeAttribute('data-src');
+        });
+    }
+
+    function hashString(str) {
+        var data = new TextEncoder().encode(str);
+        return crypto.subtle.digest('SHA-256', data).then(function (buffer) {
+            return Array.from(new Uint8Array(buffer))
+                .map(function (b) { return b.toString(16).padStart(2, '0'); })
+                .join('');
+        });
     }
 
     // --- Gallery image error fallback (replaces inline onerror) ---
