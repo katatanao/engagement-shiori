@@ -25,14 +25,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // --- 2. ハンバーガーメニュー開閉 ---
+    const openMenu = () => {
+        menuBtn.classList.add('open');
+        mobileMenu.classList.remove('translate-x-full');
+        document.body.classList.add('overflow-hidden');
+    };
+
+    const closeMenu = () => {
+        menuBtn.classList.remove('open');
+        mobileMenu.classList.add('translate-x-full');
+        document.body.classList.remove('overflow-hidden');
+    };
+
     const toggleMenu = () => {
-        menuBtn.classList.toggle('open');
-        mobileMenu.classList.toggle('translate-x-full');
-        document.body.classList.toggle('overflow-hidden');
+        if (menuBtn.classList.contains('open')) {
+            closeMenu();
+            return;
+        }
+
+        openMenu();
     };
 
     menuBtn.addEventListener('click', toggleMenu);
-    mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+    mobileLinks.forEach(link => link.addEventListener('click', closeMenu));
 
     // --- 3. Intersection Observer (フェードイン & ナビハイライト) ---
     const observerOptions = {
