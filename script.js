@@ -371,7 +371,7 @@
             }, { passive: true });
             on(DOM.modal, 'touchend', function (e) {
                 var dx = e.changedTouches[0].clientX - Gallery._touchStartX;
-                if (Math.abs(dx) < 40) return;
+                if (Math.abs(dx) < 80) return;
                 Gallery._navigate(dx < 0 ? 1 : -1);
             }, { passive: true });
         },
