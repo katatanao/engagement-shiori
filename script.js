@@ -404,7 +404,10 @@
                     Gallery._pinchMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
                 } else if (e.touches.length === 1) {
                     // Pan while zoomed: prevent scroll so touchmove stays cancelable
-                    if (Gallery._scale > 1.05) {
+                    // Skip preventDefault on buttons so their click events still fire
+                    var tgt = e.target;
+                    var isBtn = tgt === DOM.modalClose || tgt === DOM.modalPrev || tgt === DOM.modalNext;
+                    if (Gallery._scale > 1.05 && !isBtn) {
                         e.preventDefault();
                     }
                     if (!Gallery._touchWasPinch) {
