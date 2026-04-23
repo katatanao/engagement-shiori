@@ -393,6 +393,8 @@
             // --- Touch: start ---
             on(DOM.modal, 'touchstart', function (e) {
                 if (e.touches.length === 2) {
+                    // Pinch: prevent browser scroll/zoom from taking over
+                    e.preventDefault();
                     Gallery._touchWasPinch  = true;
                     Gallery._pinchStartDist = Gallery._getPinchDist(e.touches);
                     Gallery._pinchBaseScale = Gallery._scale;
@@ -401,6 +403,10 @@
                     Gallery._pinchMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
                     Gallery._pinchMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
                 } else if (e.touches.length === 1) {
+                    // Pan while zoomed: prevent scroll so touchmove stays cancelable
+                    if (Gallery._scale > 1.05) {
+                        e.preventDefault();
+                    }
                     if (!Gallery._touchWasPinch) {
                         Gallery._touchStartX = e.touches[0].clientX;
                         Gallery._touchStartY = e.touches[0].clientY;
@@ -408,7 +414,7 @@
                     Gallery._panBaseTx = Gallery._tx;
                     Gallery._panBaseTy = Gallery._ty;
                 }
-            }, { passive: true });
+            }, { passive: false });
 
             // --- Touch: move ---
             on(DOM.modal, 'touchmove', function (e) {
