@@ -320,18 +320,36 @@
     // --- Gallery ---
 
     var Gallery = {
-        _items: [],
-        _index: 0,
-        _touchStartX: 0,
-        _touchWasPinch: false,
-        _pinchScale: 1,
-        _pinchBaseScale: 1,
+        _items:          [],
+        _index:          0,
+        // zoom / pan state
+        _scale:          1,
+        _tx:             0,
+        _ty:             0,
+        _naturalRect:    null,
+        _naturalCenter:  null,
+        // pinch tracking
         _pinchStartDist: 0,
+        _pinchBaseScale: 1,
+        _pinchBaseTx:    0,
+        _pinchBaseTy:    0,
+        _pinchMidX:      0,
+        _pinchMidY:      0,
+        // swipe / pan tracking
+        _touchStartX:    0,
+        _touchStartY:    0,
+        _panBaseTx:      0,
+        _panBaseTy:      0,
+        _touchWasPinch:  false,
+        // double-tap tracking
+        _lastTapTime:    0,
+        _lastTapX:       0,
+        _lastTapY:       0,
 
         init: function () {
             this._initFallbacks();
             this._initModal();
-            this._initPinchZoom();
+            this._initViewportLock();
         },
 
         _initFallbacks: function () {
@@ -350,54 +368,132 @@
                 return img && img.style.display !== 'none';
             });
 
-            document.querySelectorAll(SEL.GALLERY_ITEM).forEach(function (item, i) {
+            document.querySelectorAll(SEL.GALLERY_ITEM).forEach(function (item) {
                 var img = item.querySelector(SEL.GALLERY_IMAGE);
                 if (!img) return;
                 on(item, 'click', function () {
                     if (img.style.display === 'none') return;
-                    var idx = Gallery._items.indexOf(item);
-                    Gallery._openAt(idx);
+                    Gallery._openAt(Gallery._items.indexOf(item));
                 });
             });
+
             on(DOM.modalClose, 'click', Gallery._close);
-            on(DOM.modalPrev, 'click', function () { Gallery._navigate(-1); });
-            on(DOM.modalNext, 'click', function () { Gallery._navigate(1); });
+            on(DOM.modalPrev,  'click', function () { Gallery._navigate(-1); });
+            on(DOM.modalNext,  'click', function () { Gallery._navigate(1); });
             on(DOM.modal, 'click', function (e) {
                 if (e.target === DOM.modal) Gallery._close();
             });
             on(document, 'keydown', function (e) {
                 if (DOM.modal.classList.contains(CLASS.HIDDEN)) return;
-                if (e.key === KEY.ESCAPE)       Gallery._close();
+                if (e.key === KEY.ESCAPE)   Gallery._close();
                 if (e.key === 'ArrowLeft')  Gallery._navigate(-1);
                 if (e.key === 'ArrowRight') Gallery._navigate(1);
             });
+
+            // --- Touch: start ---
             on(DOM.modal, 'touchstart', function (e) {
-                if (e.touches.length >= 2) {
-                    Gallery._touchWasPinch = true;
+                if (e.touches.length === 2) {
+                    Gallery._touchWasPinch  = true;
                     Gallery._pinchStartDist = Gallery._getPinchDist(e.touches);
-                    Gallery._pinchBaseScale = Gallery._pinchScale;
-                } else {
-                    Gallery._touchWasPinch = false;
-                    Gallery._touchStartX = e.changedTouches[0].clientX;
+                    Gallery._pinchBaseScale = Gallery._scale;
+                    Gallery._pinchBaseTx    = Gallery._tx;
+                    Gallery._pinchBaseTy    = Gallery._ty;
+                    Gallery._pinchMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                    Gallery._pinchMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                } else if (e.touches.length === 1) {
+                    if (!Gallery._touchWasPinch) {
+                        Gallery._touchStartX = e.touches[0].clientX;
+                        Gallery._touchStartY = e.touches[0].clientY;
+                    }
+                    Gallery._panBaseTx = Gallery._tx;
+                    Gallery._panBaseTy = Gallery._ty;
                 }
             }, { passive: true });
+
+            // --- Touch: move ---
             on(DOM.modal, 'touchmove', function (e) {
-                if (e.touches.length < 2) return;
-                e.preventDefault();
-                var scale = Gallery._pinchBaseScale * (Gallery._getPinchDist(e.touches) / Gallery._pinchStartDist);
-                Gallery._pinchScale = Math.min(Math.max(scale, 1), 4);
-                DOM.modalImage.style.transform = 'scale(' + Gallery._pinchScale + ')';
-            }, { passive: false });
-            on(DOM.modal, 'touchend', function (e) {
-                if (e.touches.length === 0 && Gallery._pinchScale < 1.05) {
-                    Gallery._pinchScale = 1;
-                    DOM.modalImage.style.transform = '';
+                if (e.touches.length >= 2) {
+                    e.preventDefault();
+                    var dist     = Gallery._getPinchDist(e.touches);
+                    var newScale = Math.min(Math.max(
+                        Gallery._pinchBaseScale * dist / Gallery._pinchStartDist, 1), 4);
+                    var ratio = newScale / Gallery._pinchBaseScale;
+                    var nc    = Gallery._naturalCenter;
+                    if (nc) {
+                        // Keep the pinch midpoint fixed on the image
+                        Gallery._tx = (Gallery._pinchMidX - nc.x) * (1 - ratio) + Gallery._pinchBaseTx * ratio;
+                        Gallery._ty = (Gallery._pinchMidY - nc.y) * (1 - ratio) + Gallery._pinchBaseTy * ratio;
+                    }
+                    Gallery._scale = newScale;
+                    Gallery._clampTranslation();
+                    Gallery._applyTransform();
+                } else if (e.touches.length === 1 && Gallery._scale > 1.05) {
+                    // Pan while zoomed
+                    e.preventDefault();
+                    Gallery._tx = Gallery._panBaseTx + e.touches[0].clientX - Gallery._touchStartX;
+                    Gallery._ty = Gallery._panBaseTy + e.touches[0].clientY - Gallery._touchStartY;
+                    Gallery._clampTranslation();
+                    Gallery._applyTransform();
                 }
-                if (Gallery._touchWasPinch || Gallery._pinchScale > 1.05) return;
-                var dx = e.changedTouches[0].clientX - Gallery._touchStartX;
-                if (Math.abs(dx) < 120) return;
+            }, { passive: false });
+
+            // --- Touch: end ---
+            on(DOM.modal, 'touchend', function (e) {
+                if (e.touches.length > 0) return; // still touching
+
+                if (Gallery._scale < 1.05) {
+                    Gallery._resetZoom();
+                }
+                if (Gallery._touchWasPinch || Gallery._scale > 1.05) {
+                    Gallery._touchWasPinch = false;
+                    return;
+                }
+                Gallery._touchWasPinch = false;
+
+                var cx = e.changedTouches[0].clientX;
+                var cy = e.changedTouches[0].clientY;
+                var dx = cx - Gallery._touchStartX;
+                var dy = cy - Gallery._touchStartY;
+
+                // Double-tap to zoom in / out
+                if (Math.abs(dx) < 12 && Math.abs(dy) < 12) {
+                    var now = Date.now();
+                    if (now - Gallery._lastTapTime < 300 &&
+                        Math.abs(cx - Gallery._lastTapX) < 40 &&
+                        Math.abs(cy - Gallery._lastTapY) < 40) {
+                        Gallery._doubleTapZoom(cx, cy);
+                        Gallery._lastTapTime = 0;
+                        return;
+                    }
+                    Gallery._lastTapTime = now;
+                    Gallery._lastTapX    = cx;
+                    Gallery._lastTapY    = cy;
+                }
+
+                // Swipe to navigate (only when not zoomed)
+                if (Math.abs(dx) < 50) return;
                 Gallery._navigate(dx < 0 ? 1 : -1);
             }, { passive: true });
+
+            on(DOM.modal, 'touchcancel', function () {
+                Gallery._touchWasPinch = false;
+            }, { passive: true });
+        },
+
+        // Zoom 2x at the tapped point, or snap back to 1x
+        _doubleTapZoom: function (x, y) {
+            var nc = Gallery._naturalCenter;
+            if (!nc) return;
+            if (Gallery._scale > 1.05) {
+                Gallery._resetZoom();
+            } else {
+                var s      = 2;
+                Gallery._tx    = (x - nc.x) * (1 - s);
+                Gallery._ty    = (y - nc.y) * (1 - s);
+                Gallery._scale = s;
+                Gallery._clampTranslation();
+                Gallery._applyTransform();
+            }
         },
 
         _getPinchDist: function (touches) {
@@ -406,7 +502,32 @@
             return Math.sqrt(dx * dx + dy * dy);
         },
 
-        _initPinchZoom: function () {
+        // Apply (tx, ty, scale) to the image element
+        _applyTransform: function () {
+            DOM.modalImage.style.transform =
+                'translate(' + Gallery._tx + 'px,' + Gallery._ty + 'px) scale(' + Gallery._scale + ')';
+        },
+
+        // Reset zoom / pan to initial state
+        _resetZoom: function () {
+            Gallery._scale = 1;
+            Gallery._tx    = 0;
+            Gallery._ty    = 0;
+            DOM.modalImage.style.transform = '';
+        },
+
+        // Clamp translation so the image always covers the screen center
+        _clampTranslation: function () {
+            var rect = Gallery._naturalRect;
+            if (!rect) return;
+            var s     = Gallery._scale;
+            var maxTx = rect.width  * (s - 1) / 2;
+            var maxTy = rect.height * (s - 1) / 2;
+            Gallery._tx = Math.min(Math.max(Gallery._tx, -maxTx), maxTx);
+            Gallery._ty = Math.min(Math.max(Gallery._ty, -maxTy), maxTy);
+        },
+
+        _initViewportLock: function () {
             var meta = document.querySelector('meta[name="viewport"]');
             Gallery._viewportOrig = meta ? meta.getAttribute('content') : null;
             Gallery._viewportMeta = meta;
@@ -419,39 +540,55 @@
             var img = items[Gallery._index].querySelector(SEL.GALLERY_IMAGE);
             var src = img && img.getAttribute('src');
             if (!src) return;
-            Gallery._pinchScale = 1;
-            Gallery._pinchBaseScale = 1;
-            DOM.modalImage.style.transform = '';
+            Gallery._resetZoom();
+            Gallery._naturalRect   = null;
+            Gallery._naturalCenter = null;
+            DOM.modalImage.classList.add('is-changing');
+            DOM.modalImage.onload = function () {
+                Gallery._cacheNaturalRect();
+                DOM.modalImage.classList.remove('is-changing');
+            };
             DOM.modalImage.src = src;
             DOM.modalImage.alt = img.getAttribute('alt') || '拡大表示した写真';
+            if (DOM.modalImage.complete) {
+                Gallery._cacheNaturalRect();
+                DOM.modalImage.classList.remove('is-changing');
+            }
             DOM.modal.classList.remove(CLASS.HIDDEN);
             DOM.modal.setAttribute('aria-hidden', 'false');
             document.body.classList.add(CLASS.OVERFLOW_HIDDEN);
             if (Gallery._viewportMeta) {
                 Gallery._viewportMeta.setAttribute('content', (Gallery._viewportOrig || '') + ', user-scalable=no');
             }
+            Gallery._preload(Gallery._index);
+        },
+
+        // Cache the natural (untransformed) rect of the modal image
+        _cacheNaturalRect: function () {
+            var rect = DOM.modalImage.getBoundingClientRect();
+            Gallery._naturalRect   = { width: rect.width, height: rect.height };
+            Gallery._naturalCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        },
+
+        _preload: function (index) {
+            var items = Gallery._items;
+            [-1, 1].forEach(function (offset) {
+                var i   = (index + offset + items.length) % items.length;
+                var img = items[i].querySelector(SEL.GALLERY_IMAGE);
+                var src = img && img.getAttribute('src');
+                if (src) { (new Image()).src = src; }
+            });
         },
 
         _navigate: function (dir) {
             Gallery._openAt(Gallery._index + dir);
         },
 
-        _open: function (img) {
-            var src = img.getAttribute('src');
-            if (!src) return;
-            DOM.modalImage.src = src;
-            DOM.modalImage.alt = img.getAttribute('alt') || '拡大表示した写真';
-            DOM.modal.classList.remove(CLASS.HIDDEN);
-            DOM.modal.setAttribute('aria-hidden', 'false');
-            document.body.classList.add(CLASS.OVERFLOW_HIDDEN);
-        },
-
         _close: function () {
             DOM.modal.classList.add(CLASS.HIDDEN);
             DOM.modal.setAttribute('aria-hidden', 'true');
             DOM.modalImage.src = '';
-            DOM.modalImage.style.transform = '';
-            Gallery._pinchScale = 1;
+            Gallery._resetZoom();
             document.body.classList.remove(CLASS.OVERFLOW_HIDDEN);
             if (Gallery._viewportMeta && Gallery._viewportOrig !== null) {
                 Gallery._viewportMeta.setAttribute('content', Gallery._viewportOrig);

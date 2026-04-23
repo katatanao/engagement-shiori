@@ -165,12 +165,21 @@ header.is-scrolled,
     max-height: calc(100vh - 48px);
     object-fit: contain;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    transition: opacity 0.12s ease;
+    touch-action: none;
+}
+
+.gallery-modal__image.is-changing {
+    opacity: 0;
 }
 
 .gallery-modal__close {
     position: absolute;
     top: 16px;
     right: 20px;
+    z-index: 20;
     border: 0;
     background: transparent;
     color: #FFFFFF;
