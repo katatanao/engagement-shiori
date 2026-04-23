@@ -3,7 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- タイトル・説明 -->
     <title>両家顔合わせのしおり</title>
+    <meta name="description" content="当日のご案内とご挨拶をまとめたWebしおりです">
+
+    <!-- OGP（LINE対策） -->
+    <meta property="og:title" content="両家顔合わせのしおり">
+    <meta property="og:description" content="当日の流れやご案内をまとめています">
+    <meta property="og:image" content="https://katatanao.github.io/engagement-shiori/ogp.jpg">
+    <meta property="og:url" content="https://katatanao.github.io/engagement-shiori/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="顔合わせしおり">
+
+    <!-- Twitter / LINE最適化 -->
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- 検索に出さない -->
+    <meta name="robots" content="noindex">
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,7 +45,11 @@
             }
         }
     </script>
+
+    <!-- フォント -->
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-theme-base text-theme-text font-serif antialiased scroll-smooth">
