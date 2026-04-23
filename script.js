@@ -38,6 +38,8 @@
         GALLERY_MODAL:       '#gallery-modal',
         GALLERY_MODAL_IMG:   '#gallery-modal-image',
         GALLERY_MODAL_CLOSE: '#gallery-modal-close',
+        GALLERY_MODAL_PREV:  '#gallery-modal-prev',
+        GALLERY_MODAL_NEXT:  '#gallery-modal-next',
         PARALLAX_BG:         '.parallax-bg',
         FADE_IN:             '.fade-in-up',
         SECTION:             '.section[id]',
@@ -82,6 +84,8 @@
         DOM.modal      = document.querySelector(SEL.GALLERY_MODAL);
         DOM.modalImage = document.querySelector(SEL.GALLERY_MODAL_IMG);
         DOM.modalClose = document.querySelector(SEL.GALLERY_MODAL_CLOSE);
+        DOM.modalPrev  = document.querySelector(SEL.GALLERY_MODAL_PREV);
+        DOM.modalNext  = document.querySelector(SEL.GALLERY_MODAL_NEXT);
         DOM.parallax   = document.querySelector(SEL.PARALLAX_BG);
     }
 
@@ -316,6 +320,10 @@
     // --- Gallery ---
 
     var Gallery = {
+        _items: [],
+        _index: 0,
+        _touchStartX: 0,
+
         init: function () {
             this._initFallbacks();
             this._initModal();
@@ -332,23 +340,58 @@
         },
 
         _initModal: function () {
-            document.querySelectorAll(SEL.GALLERY_ITEM).forEach(function (item) {
+            Gallery._items = Array.from(document.querySelectorAll(SEL.GALLERY_ITEM)).filter(function (item) {
+                var img = item.querySelector(SEL.GALLERY_IMAGE);
+                return img && img.style.display !== 'none';
+            });
+
+            document.querySelectorAll(SEL.GALLERY_ITEM).forEach(function (item, i) {
                 var img = item.querySelector(SEL.GALLERY_IMAGE);
                 if (!img) return;
                 on(item, 'click', function () {
                     if (img.style.display === 'none') return;
-                    Gallery._open(img);
+                    var idx = Gallery._items.indexOf(item);
+                    Gallery._openAt(idx);
                 });
             });
             on(DOM.modalClose, 'click', Gallery._close);
+            on(DOM.modalPrev, 'click', function () { Gallery._navigate(-1); });
+            on(DOM.modalNext, 'click', function () { Gallery._navigate(1); });
             on(DOM.modal, 'click', function (e) {
                 if (e.target === DOM.modal) Gallery._close();
             });
             on(document, 'keydown', function (e) {
-                if (e.key === KEY.ESCAPE && !DOM.modal.classList.contains(CLASS.HIDDEN)) {
-                    Gallery._close();
-                }
+                if (DOM.modal.classList.contains(CLASS.HIDDEN)) return;
+                if (e.key === KEY.ESCAPE)       Gallery._close();
+                if (e.key === 'ArrowLeft')  Gallery._navigate(-1);
+                if (e.key === 'ArrowRight') Gallery._navigate(1);
             });
+            on(DOM.modal, 'touchstart', function (e) {
+                Gallery._touchStartX = e.changedTouches[0].clientX;
+            }, { passive: true });
+            on(DOM.modal, 'touchend', function (e) {
+                var dx = e.changedTouches[0].clientX - Gallery._touchStartX;
+                if (Math.abs(dx) < 40) return;
+                Gallery._navigate(dx < 0 ? 1 : -1);
+            }, { passive: true });
+        },
+
+        _openAt: function (index) {
+            var items = Gallery._items;
+            if (!items.length) return;
+            Gallery._index = (index + items.length) % items.length;
+            var img = items[Gallery._index].querySelector(SEL.GALLERY_IMAGE);
+            var src = img && img.getAttribute('src');
+            if (!src) return;
+            DOM.modalImage.src = src;
+            DOM.modalImage.alt = img.getAttribute('alt') || '拡大表示した写真';
+            DOM.modal.classList.remove(CLASS.HIDDEN);
+            DOM.modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add(CLASS.OVERFLOW_HIDDEN);
+        },
+
+        _navigate: function (dir) {
+            Gallery._openAt(Gallery._index + dir);
         },
 
         _open: function (img) {

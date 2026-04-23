@@ -179,6 +179,34 @@ header.is-scrolled,
     cursor: pointer;
 }
 
+.gallery-modal__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 72px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 16px;
+    transition: color 0.2s;
+    user-select: none;
+    z-index: 10;
+}
+
+.gallery-modal__nav:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.gallery-modal__nav--prev {
+    left: 0;
+}
+
+.gallery-modal__nav--next {
+    right: 0;
+}
+
 /* ==========================================================================
    Password Gate
    ========================================================================== */
