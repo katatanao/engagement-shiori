@@ -323,10 +323,15 @@
         _items: [],
         _index: 0,
         _touchStartX: 0,
+        _touchWasPinch: false,
+        _pinchScale: 1,
+        _pinchBaseScale: 1,
+        _pinchStartDist: 0,
 
         init: function () {
             this._initFallbacks();
             this._initModal();
+            this._initPinchZoom();
         },
 
         _initFallbacks: function () {
@@ -367,13 +372,44 @@
                 if (e.key === 'ArrowRight') Gallery._navigate(1);
             });
             on(DOM.modal, 'touchstart', function (e) {
-                Gallery._touchStartX = e.changedTouches[0].clientX;
+                if (e.touches.length >= 2) {
+                    Gallery._touchWasPinch = true;
+                    Gallery._pinchStartDist = Gallery._getPinchDist(e.touches);
+                    Gallery._pinchBaseScale = Gallery._pinchScale;
+                } else {
+                    Gallery._touchWasPinch = false;
+                    Gallery._touchStartX = e.changedTouches[0].clientX;
+                }
             }, { passive: true });
+            on(DOM.modal, 'touchmove', function (e) {
+                if (e.touches.length < 2) return;
+                e.preventDefault();
+                var scale = Gallery._pinchBaseScale * (Gallery._getPinchDist(e.touches) / Gallery._pinchStartDist);
+                Gallery._pinchScale = Math.min(Math.max(scale, 1), 4);
+                DOM.modalImage.style.transform = 'scale(' + Gallery._pinchScale + ')';
+            }, { passive: false });
             on(DOM.modal, 'touchend', function (e) {
+                if (e.touches.length === 0 && Gallery._pinchScale < 1.05) {
+                    Gallery._pinchScale = 1;
+                    DOM.modalImage.style.transform = '';
+                }
+                if (Gallery._touchWasPinch || Gallery._pinchScale > 1.05) return;
                 var dx = e.changedTouches[0].clientX - Gallery._touchStartX;
-                if (Math.abs(dx) < 80) return;
+                if (Math.abs(dx) < 120) return;
                 Gallery._navigate(dx < 0 ? 1 : -1);
             }, { passive: true });
+        },
+
+        _getPinchDist: function (touches) {
+            var dx = touches[0].clientX - touches[1].clientX;
+            var dy = touches[0].clientY - touches[1].clientY;
+            return Math.sqrt(dx * dx + dy * dy);
+        },
+
+        _initPinchZoom: function () {
+            var meta = document.querySelector('meta[name="viewport"]');
+            Gallery._viewportOrig = meta ? meta.getAttribute('content') : null;
+            Gallery._viewportMeta = meta;
         },
 
         _openAt: function (index) {
@@ -383,11 +419,17 @@
             var img = items[Gallery._index].querySelector(SEL.GALLERY_IMAGE);
             var src = img && img.getAttribute('src');
             if (!src) return;
+            Gallery._pinchScale = 1;
+            Gallery._pinchBaseScale = 1;
+            DOM.modalImage.style.transform = '';
             DOM.modalImage.src = src;
             DOM.modalImage.alt = img.getAttribute('alt') || '拡大表示した写真';
             DOM.modal.classList.remove(CLASS.HIDDEN);
             DOM.modal.setAttribute('aria-hidden', 'false');
             document.body.classList.add(CLASS.OVERFLOW_HIDDEN);
+            if (Gallery._viewportMeta) {
+                Gallery._viewportMeta.setAttribute('content', (Gallery._viewportOrig || '') + ', user-scalable=no');
+            }
         },
 
         _navigate: function (dir) {
@@ -408,7 +450,12 @@
             DOM.modal.classList.add(CLASS.HIDDEN);
             DOM.modal.setAttribute('aria-hidden', 'true');
             DOM.modalImage.src = '';
+            DOM.modalImage.style.transform = '';
+            Gallery._pinchScale = 1;
             document.body.classList.remove(CLASS.OVERFLOW_HIDDEN);
+            if (Gallery._viewportMeta && Gallery._viewportOrig !== null) {
+                Gallery._viewportMeta.setAttribute('content', Gallery._viewportOrig);
+            }
         }
     };
 
