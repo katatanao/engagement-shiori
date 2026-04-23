@@ -31,7 +31,7 @@
 </head>
 <body class="bg-theme-base text-theme-text font-serif antialiased scroll-smooth">
 
-    <div id="password-gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-theme-base">
+    <div id="password-gate" class="c-password-gate u-center">
         <div class="text-center px-8 w-full max-w-xs">
             <p class="font-en text-theme-accent text-xl tracking-[0.4em] mb-2">両家顔合わせ</p>
             <p class="text-[12px] tracking-[0.3em] opacity-50 mb-8">2026.04.25</p>
@@ -42,22 +42,11 @@
         </div>
     </div>
 
-    <header id="main-header" class="fixed top-0 left-0 w-full z-[60] transition-all duration-500 py-4 px-6">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <header id="main-header" class="c-header">
+        <div class="u-flex u-justify-between u-items-center max-w-7xl u-mx-auto">
             <span class="font-en text-xl tracking-[0.2em] text-theme-accent font-semibold">両家顔合わせ</span>
 
-            <nav class="hidden lg:flex space-x-6 text-[14px] tracking-[0.15em] uppercase font-medium" aria-label="メインナビゲーション">
-                <a href="#greeting" class="nav-link">ご挨拶</a>
-                <a href="#timeline" class="nav-link">当日の流れ</a>
-                <a href="#seating" class="nav-link">席次表</a>
-                <a href="#family" class="nav-link">家族紹介</a>
-                <a href="#profile" class="nav-link">新郎新婦</a>
-                <a href="#menu" class="nav-link">お品書き</a>
-                <a href="#access" class="nav-link">会場案内</a>
-                <a href="#gallery" class="nav-link">思い出</a>
-                <a href="#message" class="nav-link">メッセージ</a>
-                <a href="#schedule" class="nav-link">入籍日</a>
-            </nav>
+            <nav id="desktop-nav" class="hidden lg:flex space-x-6 text-[14px] tracking-[0.15em] uppercase font-medium" aria-label="メインナビゲーション"></nav>
 
             <button id="menu-btn" class="lg:hidden flex flex-col justify-between w-6 h-4 z-[70]" aria-label="メニューを開く" aria-expanded="false" aria-controls="mobile-menu">
                 <span class="w-full h-px bg-theme-accent transition-all duration-300 origin-top-left"></span>
@@ -67,43 +56,32 @@
         </div>
     </header>
 
-    <div id="mobile-menu" class="fixed inset-0 bg-theme-white z-[55] translate-x-full transition-transform duration-500 flex flex-col items-center justify-center space-y-8 text-center" role="dialog" aria-label="モバイルメニュー">
-        <nav class="flex flex-col space-y-6 text-sm tracking-[0.2em] uppercase" aria-label="モバイルナビゲーション">
-            <a href="#greeting" class="mobile-nav-link">ご挨拶</a>
-            <a href="#timeline" class="mobile-nav-link">当日の流れ</a>
-            <a href="#seating" class="mobile-nav-link">席次表</a>
-            <a href="#family" class="mobile-nav-link">家族紹介</a>
-            <a href="#profile" class="mobile-nav-link">新郎新婦</a>
-            <a href="#menu" class="mobile-nav-link">お品書き</a>
-            <a href="#access" class="mobile-nav-link">会場案内</a>
-            <a href="#gallery" class="mobile-nav-link">思い出</a>
-            <a href="#message" class="mobile-nav-link">メッセージ</a>
-            <a href="#schedule" class="mobile-nav-link">入籍日</a>
-        </nav>
+    <div id="mobile-menu" class="c-mobile-menu u-flex u-flex-col u-items-center u-justify-center u-text-center space-y-8 translate-x-full" role="dialog" aria-label="モバイルメニュー">
+        <nav id="mobile-nav" class="flex flex-col space-y-6 text-sm tracking-[0.2em] uppercase" aria-label="モバイルナビゲーション"></nav>
         <p class="pt-8 font-en text-theme-accent tracking-widest text-lg">2026.04.25</p>
     </div>
 
-    <main id="main-content" style="display:none">
+    <main id="main-content" class="hidden">
 
-    <section class="relative h-screen flex items-center justify-center overflow-hidden">
-        <div class="parallax-bg absolute inset-0 bg-theme-light z-0 scale-110"></div>
-        <div class="absolute inset-0 bg-white/40 z-10"></div>
-        <div class="relative z-20 text-center fade-in-up">
+    <section class="c-hero u-center">
+        <div class="parallax-bg c-hero__bg bg-theme-light"></div>
+        <div class="c-hero__overlay"></div>
+        <div class="c-hero__content fade-in-up">
             <p class="font-en text-theme-accent text-xl tracking-[0.4em] mb-6">Engagement Party</p>
             <h1 class="text-3xl md:text-4xl tracking-[0.25em] leading-relaxed mb-8 font-medium">両家顔合わせのしおり</h1>
             <div class="w-px h-16 bg-theme-accent mx-auto mb-8" aria-hidden="true"></div>
             <p class="tracking-[0.2em] text-sm md:text-base">2026.04.25</p>
             <p class="tracking-[0.2em] text-sm md:text-base mt-2">堅田家 & 南出家</p>
         </div>
-        <img src="images/setugekka.jpg" alt="" class="absolute inset-0 m-auto translate-y-[20%] h-[60vh] w-auto md:h-[80vh] object-cover z-[15] opacity-45 pointer-events-none select-none" style="-webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%); mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%);" aria-hidden="true">
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce opacity-50" aria-hidden="true">
+        <img src="images/setugekka.jpg" alt="" class="hero-mask-image absolute inset-0 m-auto translate-y-[20%] h-[60vh] w-auto md:h-[80vh] object-cover z-[15] opacity-45 pointer-events-none select-none" aria-hidden="true">
+        <div class="c-hero__scroll-indicator animate-bounce" aria-hidden="true">
             <div class="w-px h-12 bg-theme-accent"></div>
         </div>
     </section>
 
-    <section id="greeting" class="section py-32 px-6 bg-white">
-        <div class="max-w-2xl mx-auto text-center fade-in-up">
-            <div class="mb-16">
+    <section id="greeting" class="section c-section c-section--white">
+        <div class="max-w-2xl u-mx-auto u-text-center fade-in-up">
+            <div class="c-section-header mb-16">
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">ご挨拶</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Greeting</p>
             </div>
@@ -111,7 +89,7 @@
                 <p class="mb-8">本日はお忙しい中<br>私たちのために お集まりいただき<br>誠にありがとうございます</p>
                 <p class="mb-8">両家の親睦を深められるよう<br>ささやかな宴を用意いたしました</p>
                 <p>和やかなひとときを<br>お過ごしいただければ幸いです</p>
-                <div class="mt-16 flex justify-center items-center space-x-8">
+                <div class="mt-16 u-flex u-justify-center u-items-center space-x-8">
                     <div class="text-right"><p class="text-xs opacity-60 mb-1">新郎</p><p class="text-lg">直</p></div>
                     <div class="w-px h-8 bg-theme-accent/30"></div>
                     <div class="text-left"><p class="text-xs opacity-60 mb-1">新婦</p><p class="text-lg">明日香</p></div>
@@ -120,31 +98,31 @@
         </div>
     </section>
 
-    <section id="timeline" class="section py-32 px-6 bg-theme-base">
-        <div class="max-w-md mx-auto fade-in-up">
-            <div class="text-center mb-20">
+    <section id="timeline" class="section c-section c-section--base">
+        <div class="max-w-md u-mx-auto fade-in-up">
+            <div class="c-section-header">
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">当日の流れ</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Time Line</p>
             </div>
-            <div class="relative ml-12 mr-auto md:ml-0 md:mr-0 md:max-w-none pl-12 space-y-12">
-                <div class="absolute left-0 top-0 bottom-0 w-px bg-theme-accent/30" aria-hidden="true"></div>
+            <div class="c-timeline space-y-12">
+                <div class="c-timeline__line" aria-hidden="true"></div>
                 <div class="relative">
-                    <div class="absolute -left-[52px] top-1 w-2.5 h-2.5 rounded-full bg-theme-accent ring-8 ring-theme-base"></div>
+                    <div class="c-timeline__dot"></div>
                     <p class="text-base font-en text-theme-accent tracking-widest mb-1">12:00</p>
                     <p class="text-sm tracking-widest">開会のご挨拶</p>
                 </div>
                 <div class="relative">
-                    <div class="absolute -left-[52px] top-1 w-2.5 h-2.5 rounded-full bg-theme-accent ring-8 ring-theme-base"></div>
+                    <div class="c-timeline__dot"></div>
                     <p class="text-base font-en text-theme-accent tracking-widest mb-1">12:05</p>
                     <p class="text-sm tracking-widest">両家家族紹介</p>
                 </div>
                 <div class="relative">
-                    <div class="absolute -left-[52px] top-1 w-2.5 h-2.5 rounded-full bg-theme-accent ring-8 ring-theme-base"></div>
+                    <div class="c-timeline__dot"></div>
                     <p class="text-base font-en text-theme-accent tracking-widest mb-1">12:15</p>
                     <p class="text-sm tracking-widest">乾杯・お食事開始</p>
                 </div>
                 <div class="relative">
-                    <div class="absolute -left-[52px] top-1 w-2.5 h-2.5 rounded-full bg-theme-accent ring-8 ring-theme-base"></div>
+                    <div class="c-timeline__dot"></div>
                     <p class="text-base font-en text-theme-accent tracking-widest mb-1">13:45</p>
                     <p class="text-sm tracking-widest">記念撮影・閉会</p>
                 </div>
@@ -152,13 +130,13 @@
         </div>
     </section>
 
-    <section id="seating" class="section py-32 px-6 bg-white">
-        <div class="max-w-xl mx-auto fade-in-up">
-            <div class="text-center mb-20">
+    <section id="seating" class="section c-section c-section--white">
+        <div class="max-w-xl u-mx-auto fade-in-up">
+            <div class="c-section-header">
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">席次表</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Seating</p>
             </div>
-            <div class="border border-theme-light p-10 md:p-16">
+            <div class="c-seating-table">
                 <p class="text-center text-[12px] tracking-[0.3em] opacity-40 mb-12 uppercase">Floor Map</p>
                 <div class="grid grid-cols-2 gap-y-12 gap-x-8 text-center text-sm tracking-widest">
                     <div><p class="text-[12px] text-theme-accent mb-1">新郎父</p><p>学 様</p></div>
@@ -172,50 +150,50 @@
         </div>
     </section>
 
-    <section id="family" class="section py-32 px-6 bg-theme-base">
-        <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-20 fade-in-up">
+    <section id="family" class="section c-section c-section--base">
+        <div class="max-w-5xl u-mx-auto">
+            <div class="c-section-header fade-in-up">
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">家族紹介</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Family</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-20">
-                <div class="space-y-12 fade-in-up ml-12 mr-auto md:ml-0 md:mr-0 md:max-w-none">
+            <div class="c-family-grid">
+                <div class="c-family-col fade-in-up">
                     <h3 class="font-en text-xl border-b border-theme-accent pb-2 inline-block">新郎側</h3>
-                    <div class="flex items-start space-x-6">
-                        <img data-src="images/family/groom-father.jpg" alt="堅田 学" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                    <div class="c-family-member">
+                        <img data-src="images/family/groom-father.jpg" alt="堅田 学" class="js-img-error-hidden c-family-member__photo">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">父</p>
                             <p class="text-[12px] tracking-widest">S41.09.11</p>
                             <p class="text-lg mb-2">堅田 学</p>
                         </div>
                     </div>
-                    <div class="flex items-start space-x-6">
-                        <img data-src="images/family/groom-mother.jpg" alt="堅田 洋子" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                    <div class="c-family-member">
+                        <img data-src="images/family/groom-mother.jpg" alt="堅田 洋子" class="js-img-error-hidden c-family-member__photo">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">母</p>
                             <p class="text-[12px] tracking-widest">1966.03.25</p>
                             <p class="text-lg mb-2">堅田 洋子</p>
                         </div>
                     </div>
-                    <div class="flex items-start space-x-6">
-                        <img data-src="images/family/groom-sister1.jpg" alt="堅田 笑香" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                    <div class="c-family-member">
+                        <img data-src="images/family/groom-sister1.jpg" alt="堅田 笑香" class="js-img-error-hidden c-family-member__photo">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">長女</p>
                             <p class="text-[12px] tracking-widest">S63.07.15</p>
                             <p class="text-lg mb-2">堅田 笑香</p>
                         </div>
                     </div>
-                    <div class="flex items-start space-x-6">
-                        <img data-src="images/family/groom-sister2.jpg" alt="南 咲歩" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                    <div class="c-family-member">
+                        <img data-src="images/family/groom-sister2.jpg" alt="南 咲歩" class="js-img-error-hidden c-family-member__photo">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">次女</p>
                             <p class="text-[12px] tracking-widest">S65.03.12</p>
                             <p class="text-lg mb-2">南 咲歩</p>
                         </div>
                     </div>
-                    <div class="flex items-start space-x-6">
-                        <img data-src="images/family/groom.jpg" alt="堅田 直" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                    <div class="c-family-member">
+                        <img data-src="images/family/groom.jpg" alt="堅田 直" class="js-img-error-hidden c-family-member__photo">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">長男</p>
                             <p class="text-[12px] tracking-widest">1998.02.17</p>
@@ -223,34 +201,34 @@
                         </div>
                     </div>
                 </div>
-                <div class="space-y-12 fade-in-up ml-12 mr-auto md:ml-0 md:mr-0 md:max-w-none">
+                <div class="c-family-col fade-in-up">
                     <h3 class="font-en text-xl border-b border-theme-accent pb-2 inline-block">新婦側</h3>
-                    <div class="flex items-start space-x-6">
-                        <img data-src="images/family/bride-father.jpg" alt="南出 健司" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                    <div class="c-family-member">
+                        <img data-src="images/family/bride-father.jpg" alt="南出 健司" class="js-img-error-hidden c-family-member__photo">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">父</p>
                             <p class="text-[12px] tracking-widest">S41.09.11</p>
                             <p class="text-lg mb-2">南出 健司</p>
                         </div>
                     </div>
-                    <div class="flex items-start space-x-6">
-                        <img data-src="images/family/bride-mother.jpg" alt="南出 千加代" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                    <div class="c-family-member">
+                        <img data-src="images/family/bride-mother.jpg" alt="南出 千加代" class="js-img-error-hidden c-family-member__photo">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">母</p>
                             <p class="text-[12px] tracking-widest">S44.05.23</p>
                             <p class="text-lg mb-2">南出 千加代</p>
                         </div>
                     </div>
-                    <div class="flex items-start space-x-6">
-                        <img data-src="images/family/bride-brother.jpg" alt="南出 雄貴" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                    <div class="c-family-member">
+                        <img data-src="images/family/bride-brother.jpg" alt="南出 雄貴" class="js-img-error-hidden c-family-member__photo">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">長男</p>
                             <p class="text-[12px] tracking-widest">S63.07.15</p>
                             <p class="text-lg mb-2">南出 雄貴</p>
                         </div>
                     </div>
-                    <div class="flex items-start space-x-6">
-                        <img data-src="images/family/bride.jpg" alt="南出 明日香" class="w-16 h-16 rounded-full flex-shrink-0 object-cover bg-theme-light" onerror="this.style.visibility='hidden'">
+                    <div class="c-family-member">
+                        <img data-src="images/family/bride.jpg" alt="南出 明日香" class="js-img-error-hidden c-family-member__photo">
                         <div>
                             <p class="text-[12px] text-theme-accent tracking-widest">長女</p>
                             <p class="text-[12px] tracking-widest">1998.05.08</p>
@@ -262,28 +240,28 @@
         </div>
     </section>
 
-    <section id="profile" class="section py-32 px-6 bg-white">
-        <div class="max-w-4xl mx-auto fade-in-up">
-            <div class="text-center mb-20">
+    <section id="profile" class="section c-section c-section--white">
+        <div class="max-w-4xl u-mx-auto fade-in-up">
+            <div class="c-section-header">
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">新郎新婦</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Profile</p>
             </div>
-            <div class="grid md:grid-cols-2 gap-12">
-                <div class="bg-theme-base p-10">
+            <div class="c-profile-grid">
+                <div class="c-profile-card">
                     <p class="font-en text-theme-accent text-sm mb-4">新郎</p>
                     <h3 class="text-xl tracking-widest mb-6">堅田 直</h3>
                     <ul class="text-sm space-y-4 opacity-80">
-                        <li class="flex justify-between border-b border-white pb-2"><span>出身</span><span>和歌山県白浜町</span></li>
-                        <li class="flex justify-between border-b border-white pb-2"><span>趣味</span><span>音楽ライブ・ゲーム</span></li>
+                        <li class="u-flex u-justify-between border-b border-white pb-2"><span>出身</span><span>和歌山県白浜町</span></li>
+                        <li class="u-flex u-justify-between border-b border-white pb-2"><span>趣味</span><span>音楽ライブ・ゲーム</span></li>
                         <li class="pt-2 leading-loose">お互いに支えあえる、温かい家庭を築いていきたいです。</li>
                     </ul>
                 </div>
-                <div class="bg-theme-base p-10">
+                <div class="c-profile-card">
                     <p class="font-en text-theme-accent text-sm mb-4">新婦</p>
                     <h3 class="text-xl tracking-widest mb-6">南出 明日香</h3>
                     <ul class="text-sm space-y-4 opacity-80">
-                        <li class="flex justify-between border-b border-white pb-2"><span>出身</span><span>大阪府大阪市阿倍野区</span></li>
-                        <li class="flex justify-between border-b border-white pb-2"><span>趣味</span><span>音楽ライブ・麻雀</span></li>
+                        <li class="u-flex u-justify-between border-b border-white pb-2"><span>出身</span><span>大阪府大阪市阿倍野区</span></li>
+                        <li class="u-flex u-justify-between border-b border-white pb-2"><span>趣味</span><span>音楽ライブ・麻雀</span></li>
                         <li class="pt-2 leading-loose">お互いを思いやり、何でも話し合える関係でいたいです。</li>
                     </ul>
                 </div>
@@ -291,9 +269,9 @@
         </div>
     </section>
 
-    <section id="menu" class="section py-32 px-6 bg-theme-base">
-        <div class="max-w-2xl mx-auto fade-in-up text-center">
-            <div class="mb-20">
+    <section id="menu" class="section c-section c-section--base">
+        <div class="max-w-2xl u-mx-auto u-text-center fade-in-up">
+            <div class="c-section-header">
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">お品書き</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Menu</p>
             </div>
@@ -337,13 +315,13 @@
         </div>
     </section>
 
-    <section id="access" class="section py-32 px-6 bg-white">
-        <div class="max-w-4xl mx-auto fade-in-up">
-            <div class="text-center mb-20">
+    <section id="access" class="section c-section c-section--white">
+        <div class="max-w-4xl u-mx-auto fade-in-up">
+            <div class="c-section-header">
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">会場案内</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Access</p>
             </div>
-            <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="c-access-grid">
                 <div class="space-y-6">
                     <h3 class="text-xl tracking-widest">Dynamic Kitchen & Bar 燦 SUN ヒルトンプラザウエスト店</h3>
                     <address class="text-sm leading-relaxed opacity-80 not-italic">
@@ -353,20 +331,20 @@
                     </address>
                     <a href="https://www.dynacjapan.com/brands/sun/shops/hiltonplaza-west/" target="_blank" rel="noopener noreferrer" class="inline-block text-sm tracking-[0.2em] text-theme-accent border-b border-theme-accent/40 pb-1 hover:opacity-70 transition">Official Website</a>
                 </div>
-                <div class="h-64 bg-theme-light rounded-sm overflow-hidden">
+                <div class="c-access-map">
                     <iframe data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.2162901034053!2d135.495296!3d34.69972419999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e68d3b11e15f%3A0x8a0ff8e64bc5b13e!2zRHluYW1pYyBLaXRjaGVuICYgQmFyIOeHpu-8jVNVTu-8jSDjg5Ljg6vjg4jjg7Pjg5fjg6njgrbjgqbjgqjjgrnjg4jlupc!5e0!3m2!1sja!2sjp!4v1776781082930!5m2!1sja!2sjp" width="100%" height="100%" style="border:0;" allowfullscreen="" title="Dynamic Kitchen & Bar 燦 SUN ヒルトンプラザウエスト店の地図" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="gallery" class="section py-32 px-6 bg-theme-base overflow-hidden">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-20 fade-in-up">
+    <section id="gallery" class="section c-section c-section--base overflow-hidden">
+        <div class="max-w-6xl u-mx-auto">
+            <div class="c-section-header fade-in-up">
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">思い出</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Gallery</p>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-in-up">
+            <div class="c-gallery-grid fade-in-up">
                 <div class="gallery-item relative aspect-square overflow-hidden bg-white">
                     <img data-src="images/memory/memory-1.jpg" alt="思い出の写真 1" class="gallery-image" loading="lazy">
                     <div class="gallery-fallback hidden">Memory 1</div>
@@ -395,32 +373,32 @@
         </div>
     </section>
 
-    <section id="message" class="section py-32 px-6 bg-white">
-        <div class="max-w-3xl mx-auto fade-in-up">
-            <div class="text-center mb-20">
+    <section id="message" class="section c-section c-section--white">
+        <div class="max-w-3xl u-mx-auto fade-in-up">
+            <div class="c-section-header">
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">メッセージ</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Message</p>
             </div>
             <div class="space-y-20">
-                <div class="relative p-8 bg-theme-base rounded-sm">
-                    <p class="absolute -top-4 left-6 px-4 bg-theme-accent text-white text-[12px] tracking-widest uppercase py-1">直～南出様へ～</p>
+                <div class="c-message-card">
+                    <p class="c-message-card__label">直～南出様へ～</p>
                     <p class="text-[15px] leading-loose italic opacity-80">「明日香さんとこれから一緒に歩んでいけることを、とても嬉しく思っています。まだ未熟ではありますが、支え合いながら温かい家庭を築いていきます。これからどうぞよろしくお願いいたします。」</p>
                 </div>
-                <div class="relative p-8 bg-theme-base rounded-sm">
-                    <p class="absolute -top-4 left-6 px-4 bg-theme-accent text-white text-[12px] tracking-widest uppercase py-1">明日香～堅田様へ～</p>
+                <div class="c-message-card">
+                    <p class="c-message-card__label">明日香～堅田様へ～</p>
                     <p class="text-[15px] leading-loose italic opacity-80">「太郎さんと出会えたご縁に感謝しています。お互いを尊重し、笑顔の絶えない毎日を送れるよう願っています。」</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="schedule" class="section py-32 px-6 bg-theme-base">
-        <div class="max-w-md mx-auto fade-in-up text-center">
-            <div class="mb-20">
+    <section id="schedule" class="section c-section c-section--base">
+        <div class="max-w-md u-mx-auto u-text-center fade-in-up">
+            <div class="c-section-header">
                 <h2 class="font-en text-4xl text-theme-accent tracking-widest mb-3">入籍日</h2>
                 <p class="text-[12px] tracking-[0.3em] uppercase opacity-60">Our Wedding Date</p>
             </div>
-            <div class="bg-white p-6 tracking-widest">
+            <div class="c-schedule-card">
                 <p class="text-3xl text-theme-accent mb-2 font-en">2026.05.04</p>
             </div>
         </div>
@@ -428,7 +406,7 @@
 
     </main>
 
-    <footer id="main-footer" style="display:none" class="py-12 text-center text-[10px] opacity-40 tracking-[0.3em] uppercase border-t border-theme-light">
+    <footer id="main-footer" class="hidden py-12 text-center text-[10px] opacity-40 tracking-[0.3em] uppercase border-t border-theme-light">
         &copy; 2026 nao & asuka Engagement
     </footer>
 
