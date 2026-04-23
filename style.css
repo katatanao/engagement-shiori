@@ -255,6 +255,11 @@ header.is-scrolled,
 
 /* --- Password Gate --- */
 
+/* 認証済みの場合、描画前にゲートを非表示にしてちらつきを防ぐ */
+html.is-authenticated #password-gate {
+    display: none !important;
+}
+
 .c-password-gate {
     position: fixed;
     inset: 0;

@@ -51,6 +51,13 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- パスワード認証済みの場合、描画前にゲートを即時非表示にしてちらつきを防ぐ -->
+    <script>
+        if (sessionStorage.getItem('shiori_auth') === '1') {
+            document.documentElement.classList.add('is-authenticated');
+        }
+    </script>
 </head>
 <body class="bg-theme-base text-theme-text font-serif antialiased scroll-smooth">
 
