@@ -349,7 +349,6 @@
         init: function () {
             this._initFallbacks();
             this._initModal();
-            this._initViewportLock();
         },
 
         _initFallbacks: function () {
@@ -392,10 +391,10 @@
             });
 
             // --- Touch: start ---
+            // touch-action:none on .gallery-modal handles browser-level pinch/scroll,
+            // so e.preventDefault() is no longer needed here → passive:true で入力レイテンシを削減
             on(DOM.modal, 'touchstart', function (e) {
                 if (e.touches.length === 2) {
-                    // Pinch: prevent browser scroll/zoom from taking over
-                    e.preventDefault();
                     Gallery._touchWasPinch  = true;
                     Gallery._pinchStartDist = Gallery._getPinchDist(e.touches);
                     Gallery._pinchBaseScale = Gallery._scale;
@@ -404,13 +403,6 @@
                     Gallery._pinchMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
                     Gallery._pinchMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
                 } else if (e.touches.length === 1) {
-                    // Pan while zoomed: prevent scroll so touchmove stays cancelable
-                    // Skip preventDefault on buttons so their click events still fire
-                    var tgt = e.target;
-                    var isBtn = tgt === DOM.modalClose || tgt === DOM.modalPrev || tgt === DOM.modalNext;
-                    if (Gallery._scale > 1.05 && !isBtn) {
-                        e.preventDefault();
-                    }
                     if (!Gallery._touchWasPinch) {
                         Gallery._touchStartX = e.touches[0].clientX;
                         Gallery._touchStartY = e.touches[0].clientY;
@@ -418,7 +410,7 @@
                     Gallery._panBaseTx = Gallery._tx;
                     Gallery._panBaseTy = Gallery._ty;
                 }
-            }, { passive: false });
+            }, { passive: true });
 
             // --- Touch: move ---
             on(DOM.modal, 'touchmove', function (e) {
@@ -545,12 +537,6 @@
             Gallery._ty = Math.min(Math.max(Gallery._ty, -maxTy), maxTy);
         },
 
-        _initViewportLock: function () {
-            var meta = document.querySelector('meta[name="viewport"]');
-            Gallery._viewportOrig = meta ? meta.getAttribute('content') : null;
-            Gallery._viewportMeta = meta;
-        },
-
         _openAt: function (index) {
             var items = Gallery._items;
             if (!items.length) return;
@@ -571,9 +557,6 @@
             DOM.modal.classList.remove(CLASS.HIDDEN);
             DOM.modal.setAttribute('aria-hidden', 'false');
             document.body.classList.add(CLASS.OVERFLOW_HIDDEN);
-            if (Gallery._viewportMeta) {
-                Gallery._viewportMeta.setAttribute('content', (Gallery._viewportOrig || '') + ', user-scalable=no');
-            }
             // モーダルが visible になった後のフレームで rect をキャッシュ
             // (display:none 中に getBoundingClientRect() を呼ぶと 0 が返るため)
             requestAnimationFrame(function () {
@@ -619,9 +602,6 @@
             DOM.modalImage.src = '';
             Gallery._resetZoom();
             document.body.classList.remove(CLASS.OVERFLOW_HIDDEN);
-            if (Gallery._viewportMeta && Gallery._viewportOrig !== null) {
-                Gallery._viewportMeta.setAttribute('content', Gallery._viewportOrig);
-            }
         }
     };
 

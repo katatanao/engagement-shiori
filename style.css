@@ -152,6 +152,7 @@ header.is-scrolled,
     justify-content: center;
     padding: 24px;
     background: rgba(34, 29, 24, 0.88);
+    touch-action: none;
 }
 
 .gallery-modal__content {
@@ -186,6 +187,7 @@ header.is-scrolled,
     font-size: 40px;
     line-height: 1;
     cursor: pointer;
+    touch-action: manipulation;
 }
 
 .gallery-modal__nav {
