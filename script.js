@@ -373,6 +373,7 @@
                 if (!img) return;
                 on(item, 'click', function () {
                     if (img.style.display === 'none') return;
+                    Gallery._opener = item;
                     Gallery._openAt(Gallery._items.indexOf(item));
                 });
             });
@@ -448,7 +449,15 @@
 
             // --- Touch: end ---
             on(DOM.modal, 'touchend', function (e) {
-                if (e.touches.length > 0) return; // still touching
+                // 2本指→1本指の移行: パン基点を現在位置に同期してジャンプを防ぐ
+                if (e.touches.length === 1) {
+                    Gallery._touchStartX = e.touches[0].clientX;
+                    Gallery._touchStartY = e.touches[0].clientY;
+                    Gallery._panBaseTx   = Gallery._tx;
+                    Gallery._panBaseTy   = Gallery._ty;
+                    return;
+                }
+                if (e.touches.length > 0) return;
 
                 if (Gallery._scale < 1.05) {
                     Gallery._resetZoom();
@@ -559,16 +568,20 @@
             };
             DOM.modalImage.src = src;
             DOM.modalImage.alt = img.getAttribute('alt') || '拡大表示した写真';
-            if (DOM.modalImage.complete) {
-                Gallery._cacheNaturalRect();
-                DOM.modalImage.classList.remove('is-changing');
-            }
             DOM.modal.classList.remove(CLASS.HIDDEN);
             DOM.modal.setAttribute('aria-hidden', 'false');
             document.body.classList.add(CLASS.OVERFLOW_HIDDEN);
             if (Gallery._viewportMeta) {
                 Gallery._viewportMeta.setAttribute('content', (Gallery._viewportOrig || '') + ', user-scalable=no');
             }
+            // モーダルが visible になった後のフレームで rect をキャッシュ
+            // (display:none 中に getBoundingClientRect() を呼ぶと 0 が返るため)
+            requestAnimationFrame(function () {
+                Gallery._cacheNaturalRect();
+                if (DOM.modalImage.complete) {
+                    DOM.modalImage.classList.remove('is-changing');
+                }
+            });
             Gallery._preload(Gallery._index);
         },
 
@@ -594,8 +607,15 @@
         },
 
         _close: function () {
+            if (document.activeElement && DOM.modal.contains(document.activeElement)) {
+                document.activeElement.blur();
+            }
             DOM.modal.classList.add(CLASS.HIDDEN);
             DOM.modal.setAttribute('aria-hidden', 'true');
+            if (Gallery._opener) {
+                Gallery._opener.focus();
+                Gallery._opener = null;
+            }
             DOM.modalImage.src = '';
             Gallery._resetZoom();
             document.body.classList.remove(CLASS.OVERFLOW_HIDDEN);
