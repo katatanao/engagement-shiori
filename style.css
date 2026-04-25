@@ -32,6 +32,7 @@ header.is-scrolled,
     position: relative;
     padding-bottom: 4px;
     transition: color 0.3s;
+    white-space: nowrap;
 }
 
 .nav-link::after {
@@ -119,7 +120,6 @@ header.is-scrolled,
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.7s;
 }
 
 .gallery-fallback {
@@ -133,12 +133,6 @@ header.is-scrolled,
     font-size: 10px;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    transition: transform 0.7s;
-}
-
-.gallery-item:hover .gallery-image,
-.gallery-item:hover .gallery-fallback {
-    transform: scale(1.1);
 }
 
 /* --- Gallery Modal --- */

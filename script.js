@@ -62,7 +62,8 @@
         { href: '#access',   label: '会場案内' },
         { href: '#gallery',  label: '思い出' },
         { href: '#message',  label: 'メッセージ' },
-        { href: '#schedule', label: '入籍日' }
+        { href: '#schedule', label: '入籍日' },
+        { href: '#photo',    label: '記念写真' }
     ];
 
     // --- DOM Cache ---
@@ -362,17 +363,18 @@
         },
 
         _initModal: function () {
-            Gallery._items = Array.from(document.querySelectorAll(SEL.GALLERY_ITEM)).filter(function (item) {
-                var img = item.querySelector(SEL.GALLERY_IMAGE);
-                return img && img.style.display !== 'none';
-            });
-
             document.querySelectorAll(SEL.GALLERY_ITEM).forEach(function (item) {
                 var img = item.querySelector(SEL.GALLERY_IMAGE);
                 if (!img) return;
                 on(item, 'click', function () {
                     if (img.style.display === 'none') return;
                     Gallery._opener = item;
+                    var section = item.closest('.section[id]');
+                    var scope   = section || document;
+                    Gallery._items = Array.from(scope.querySelectorAll(SEL.GALLERY_ITEM)).filter(function (i) {
+                        var im = i.querySelector(SEL.GALLERY_IMAGE);
+                        return im && im.style.display !== 'none';
+                    });
                     Gallery._openAt(Gallery._items.indexOf(item));
                 });
             });
@@ -540,7 +542,7 @@
         _openAt: function (index) {
             var items = Gallery._items;
             if (!items.length) return;
-            Gallery._index = (index + items.length) % items.length;
+            Gallery._index = Math.min(Math.max(index, 0), items.length - 1);
             var img = items[Gallery._index].querySelector(SEL.GALLERY_IMAGE);
             var src = img && img.getAttribute('src');
             if (!src) return;
@@ -566,6 +568,8 @@
                 }
             });
             Gallery._preload(Gallery._index);
+            DOM.modalPrev.classList.toggle(CLASS.HIDDEN, Gallery._index === 0);
+            DOM.modalNext.classList.toggle(CLASS.HIDDEN, Gallery._index === items.length - 1);
         },
 
         // Cache the natural (untransformed) rect of the modal image
@@ -578,7 +582,8 @@
         _preload: function (index) {
             var items = Gallery._items;
             [-1, 1].forEach(function (offset) {
-                var i   = (index + offset + items.length) % items.length;
+                var i = index + offset;
+                if (i < 0 || i >= items.length) return;
                 var img = items[i].querySelector(SEL.GALLERY_IMAGE);
                 var src = img && img.getAttribute('src');
                 if (src) { (new Image()).src = src; }
@@ -586,7 +591,9 @@
         },
 
         _navigate: function (dir) {
-            Gallery._openAt(Gallery._index + dir);
+            var newIndex = Gallery._index + dir;
+            if (newIndex < 0 || newIndex >= Gallery._items.length) return;
+            Gallery._openAt(newIndex);
         },
 
         _close: function () {
